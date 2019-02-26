@@ -3,12 +3,10 @@ package Objects;
 //TODO сделать загрузку сообщений из файла в стек
 //TODO реализовать систему Вам пришло новое сообщение, то есть оно записывается в стек и выводится на экран
 //TODO вывод сообщений из стека когда этого захочет пользователь
-//TODO сделать создание файла для пользователя при регистрации
-//TODO сделать регистрацию
-//TODO определять читаемый файл в конструкторе класса
+//TODODO сделать регистрацию (регистрация перенесена в отдельный класс)
+//TODODO определять читаемый файл в конструкторе класса(по какимто неведомым причинам это так не работает поэтому он определяется каждый раз когда это нужно)
 //TODO сделать рандомное создание сообщений (приготовить данные, сгенерировать их)
-//TODO создать список пользователей чтобы можно было их рандомно выбирать при генерации сообщений
-//TODO при авторизации записывать это все в два файла (имя юзера в users.txt, а пароль юзера + юзера в users.properties)
+//TODODO создать список пользователей чтобы можно было их рандомно выбирать при генерации сообщений
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -23,8 +21,13 @@ public class Messages {
     private String username, pass;
     private FileInputStream fis;
     private Properties properties;
-    private String userpath;
-    private int count = countOfStrInFiles();
+    private String userpath ;
+    private int count;
+    private Stack<String> stack;
+
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //КОНСТРУКТОР
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     public Messages(String username, String pass) {
         this.username = username;
         this.pass = pass;
@@ -32,28 +35,41 @@ public class Messages {
             System.out.print("\nВы ввели неверные данные. Перезапустите программу и попробуйте снова.");
             System.exit(0);
         }
-        userpath = "secretfiles/" + username + "data.txt";
+        count = countOfStrInFiles();
+        System.out.print("   asdfaskdf    " + count);
 
     }
 
-    public void saveToFile(Stack stack){
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //ДЕЙСТВИЯ СО СТЭКОМ
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    //сохраняет данные из стека в файл
+    public void saveToFile(){
 
     }
 
-    public Stack addToStack(Stack stack){
-        return stack;
-    }
-
-    public Stack newMessage(Stack stack){
-        return stack;
-    }
-
-    public void whatInStack(Stack stack){
+    //добавляет данные из файла в стэк
+    public void addToStack(){
 
     }
+
+    //создает новое сообщение и добавляет его в стэк
+    public void newMessage(){
+
+    }
+
+    //вывод того что есть в стеке
+    public void whatInStack(){
+
+    }
+
+
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //ПРОВЕРКА ПРАВИЛЬНОСТИ ВВЕДЕННЫХ ДАННЫХ
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     private boolean checkAuthorithationData() {
         try {
-
             fis = new FileInputStream("secretfiles/users.properties");
             properties = new Properties();
             properties.load(fis);
@@ -70,10 +86,18 @@ public class Messages {
         return true;
     }
 
+
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //ВЫВОД ДАННЫХ ИЗ ФАЙЛА (СООБЩЕНИЙ)
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    //читает данные из файла
     public void writerFromFile() {
+        userpath = "secretfiles/" + username + "data.txt";
         try {
             File file = new File(userpath);
             Scanner scan= new Scanner(file);
+            System.out.println();
             while (scan.hasNextLine()){
                 System.out.print(scan.nextLine());
                 System.out.println();
@@ -82,57 +106,69 @@ public class Messages {
             System.out.print("Данные этого пользователя кудато пропали. Обратитесь к дебилу которыый это писал");
         }
     }
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//ВСЕ ЧТО НУЖНО ДЛЯ ГЕНЕРАЦИИ СООБЩЕНИЙ И ЗАПИСИ ИХ В ФАЙЛ
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //ВСЕ ЧТО НУЖНО ДЛЯ ГЕНЕРАЦИИ СООБЩЕНИЙ И ЗАПИСИ ИХ В ФАЙЛ
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    //генерирует сообщения и запмсывает из в файл, который у каждого узера отдельный
     public void generateRandomMessagess(){
         try{
-
+            int countt = 0;
             Path path = Paths.get("secretfiles/" + username + "data.txt");
             Charset charset = StandardCharsets.UTF_8;
             String content = getDate() + getRandomUser();
+            System.out.print("\nИдет создание документа\n");
             for (int i = 1;i<10;i++){
+                System.out.print(".");
                 TimeUnit.SECONDS.sleep(1);
                 content += "\n" + getDate() + getRandomUser();
             }
             Files.write(path, content.getBytes(charset));
-
         }catch(IOException e){
-            System.out.print("\nЧтото пошло не так. Код ошибки 5");
+            System.out.print("\nGenerateRandomMessagess IOEXEPTION");
             System.exit(5);
         }catch (InterruptedException e){
+            System.out.print("\nGenerateRandomMessagess Interupted Exeption");
             System.exit(1488);
         }
     }
 
+
+    //возвращает текущую дату (используется для создания файла с сообщениями
     private String getDate(){
         return new Date().toString();
     }
 
+    //случайно выбирает пользователя который отправил сообщение (используется для генерации сообщений)
     private String getRandomUser(){
         try {
             Random random = new Random();
-            String content = Files.readAllLines(Paths.get("secretfiles/users.properties")).get(random.nextInt(count + 1));
+            String content = Files.readAllLines(Paths.get("secretfiles/users.txt")).get(random.nextInt(count));
             return content;
         }catch (IOException e){
-            System.out.print("\ngetRandomUser");
+            System.out.print("\ngetRandomUser IOExeption");
         }
         return "null";
     }
 
+    //считает строчки в файле
     private int countOfStrInFiles(){
+        userpath = "secretfiles/users.txt";
         try {
-            File file = new File("secretfiles/users.properties");
-            Scanner scan = new Scanner(file);
-            int count = 0;
-            while(scan.hasNextInt()){
-                ++count;
+            File file = new File(userpath);
+            System.out.print("\n" + userpath);
+            LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(file));
+            count = 0;
+            while (null != lineNumberReader.readLine()){
+                count++;
             }
             return count;
-
         }catch (FileNotFoundException e){
-            System.out.print("\ncountOfStrInFiles");
+            System.out.print("\ncountOfStrInFiles\nFileNotFound");
+        }catch(IOException e){
+            System.out.print("\ncountOfStrInFiles\nIOExeption");
         }
         return 0;
     }
+
 }
