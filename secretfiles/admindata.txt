@@ -1,10 +1,10 @@
-Tue Feb 26 16:00:37 MSK 2019sanya=12345
-Tue Feb 26 16:00:38 MSK 2019admin=qwerty
-Tue Feb 26 16:00:39 MSK 2019sanya=12345
-Tue Feb 26 16:00:40 MSK 2019lol=sanya
-Tue Feb 26 16:00:41 MSK 2019lol=sanya
-Tue Feb 26 16:00:42 MSK 2019lol=sanya
-Tue Feb 26 16:00:43 MSK 2019sanya=12345
-Tue Feb 26 16:00:44 MSK 2019admin=qwerty
-Tue Feb 26 16:00:45 MSK 2019lol=sanya
-Tue Feb 26 16:00:46 MSK 2019lol=sanya
+Tue Feb 26 16:48:18 MSK 2019sanya
+Tue Feb 26 16:48:20 MSK 2019 - sanya - У меня нет таких прекрасных родителей
+Tue Feb 26 16:48:21 MSK 2019 - sanya - Не понял
+Tue Feb 26 16:48:22 MSK 2019 - admin - Нет
+Tue Feb 26 16:48:23 MSK 2019 - sanya - Для кого эти цветы
+Tue Feb 26 16:48:24 MSK 2019 - admin - Что такое программирование
+Tue Feb 26 16:48:25 MSK 2019 - sanya - Что делаешь?
+Tue Feb 26 16:48:26 MSK 2019 - admin - Не понял
+Tue Feb 26 16:48:27 MSK 2019 - lol - Не понял
+Tue Feb 26 16:48:28 MSK 2019 - admin - У тебя же уже есть телефон

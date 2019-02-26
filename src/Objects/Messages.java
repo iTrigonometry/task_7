@@ -7,7 +7,7 @@ package Objects;
 //TODODO определять читаемый файл в конструкторе класса(по какимто неведомым причинам это так не работает поэтому он определяется каждый раз когда это нужно)
 //TODO сделать рандомное создание сообщений (приготовить данные, сгенерировать их)
 //TODODO создать список пользователей чтобы можно было их рандомно выбирать при генерации сообщений
-
+//TODO изучить как работает рандом так как он не очнь класно генерирует сообщения. возможно стоит заменить
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -121,7 +121,7 @@ public class Messages {
             for (int i = 1;i<10;i++){
                 System.out.print(".");
                 TimeUnit.SECONDS.sleep(1);
-                content += "\n" + getDate() + getRandomUser();
+                content += "\n" + getDate() + " - " + getRandomUser() + " - " + getRandomText();
             }
             Files.write(path, content.getBytes(charset));
         }catch(IOException e){
@@ -147,6 +147,18 @@ public class Messages {
             return content;
         }catch (IOException e){
             System.out.print("\ngetRandomUser IOExeption");
+        }
+        return "null";
+    }
+
+    //возвращает рандомный текст сообщения из заранее заратовленных
+    private String getRandomText(){
+        try {
+            Random random = new Random();
+            String content = Files.readAllLines(Paths.get("secretfiles/textmessages.txt")).get(random.nextInt(18));
+            return content;
+        }catch (IOException e){
+            System.out.print("\ngetRandomText IOExeption");
         }
         return "null";
     }
