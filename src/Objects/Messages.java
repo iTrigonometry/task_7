@@ -7,7 +7,7 @@ package Objects;
 //TODODO определять читаемый файл в конструкторе класса(по какимто неведомым причинам это так не работает поэтому он определяется каждый раз когда это нужно)
 //TODO сделать рандомное создание сообщений (приготовить данные, сгенерировать их)
 //TODODO создать список пользователей чтобы можно было их рандомно выбирать при генерации сообщений
-//TODO изменить seed рандома, вдруг я выяснил что Randem генерирует псевдослучайные числа
+//TODODO изменить seed рандома, вдруг я выяснил что Randem генерирует псевдослучайные числа
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -143,7 +143,7 @@ public class Messages {
     //случайно выбирает пользователя который отправил сообщение (используется для генерации сообщений)
     private String getRandomUser(){
         try {
-            Random random = new Random();
+            Random random = new Random(System.currentTimeMillis());
             String content = Files.readAllLines(Paths.get("secretfiles/users.txt")).get(random.nextInt(count));
             return content;
         }catch (IOException e){
@@ -155,7 +155,7 @@ public class Messages {
     //возвращает рандомный текст сообщения из заранее заратовленных
     private String getRandomText(){
         try {
-            Random random = new Random();
+            Random random = new Random(System.currentTimeMillis());
             String content = Files.readAllLines(Paths.get("secretfiles/textmessages.txt")).get(random.nextInt(18));
             return content;
         }catch (IOException e){
