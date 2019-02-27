@@ -1,5 +1,13 @@
 package Objects;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Scanner;
 
 //TODO при авторизации записывать это все в два файла (имя юзера в users.txt, а пароль юзера + юзера в users.properties)
@@ -23,20 +31,50 @@ public class Registration {
     public Registration(){
         Scanner  scanner = new Scanner(System.in);
 
-        username = scanner.next();
+        username = inputUsername();
         password = scanner.next();
-        writeDataToFiles();
+        writeDataToProperties();
         createUserFile();
-
     }
 
     private void createUserFile(){
-        Messages messages = new Messages(username,password);
+        File file = new File("secretfiles/", username + "data.txt");
+        Messages messages = new Messages(username, password);
+        messages.generateRandomMessagess();
     }
 
-    private void writeDataToFiles(){
-
+    private void writeDataToProperties() {
+        try {
+            String content = new String(Files.readAllBytes(Paths.get("secretfiles/users.properties")), StandardCharsets.UTF_8);
+            content += "\n" + username + "=" + password;
+            Files.write(Paths.get("secretfiles/users.properties"), content.getBytes(StandardCharsets.UTF_8));
+        }catch(IOException e){
+            System.exit(1488);
+        }
     }
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //ВВОД ЛОГИНА ПОЛЬЗОВАТЕЛЯ
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    private String inputUsername(){
+        String result = "11";
+        Scanner scanner = new Scanner(System.in);
+        boolean flag = true;
+        try{
+        do{
+            result = scanner.next();
+            username = result;
+            Path path = Paths.get("secretfiles/users.txt");
+            String string = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
 
-
+            if(!(new String (Files.readAllBytes(path)).contains(username))){
+                string += "\n" + username;
+                Files.write(path,string.getBytes(StandardCharsets.UTF_8));
+                return result;
+            }
+        }while(flag);
+        }catch (IOException e) {
+            System.exit(112);
+        }
+        return result;
+    }
 }

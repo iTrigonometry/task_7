@@ -117,7 +117,7 @@ public class Messages {
             int countt = 0;
             Path path = Paths.get("secretfiles/" + username + "data.txt");
             Charset charset = StandardCharsets.UTF_8;
-            String content = getDate() + getRandomUser();
+            String content = getDate() + " - " + getRandomUser() + " - " + getRandomText();
             System.out.print("\nИдет создание документа\n");
             for (int i = 1;i<10;i++){
                 System.out.print(".");
