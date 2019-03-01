@@ -24,12 +24,13 @@ public class Messages {
     private Properties properties;
     private String userpath ;
     private int count;
-    private Stack<String> stack;
-
+    private Stack<String> stack = new Stack<String>();
+    private Stack<String> tempStack;
+    private Iterator iterator;
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //КОНСТРУКТОР
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    public Messages(String username, String pass) {
+    public Messages(String username, String pass, boolean flag) {
         this.username = username;
         this.pass = pass;
         if(!checkAuthorithationData()){
@@ -37,8 +38,8 @@ public class Messages {
             System.exit(0);
         }
         count = countOfStrInFiles();
-        System.out.print("   asdfaskdf    " + count);
-
+        if(flag)
+        addToStack();
     }
 
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -46,23 +47,53 @@ public class Messages {
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     //сохраняет данные из стека в файл
-    public void saveToFile(){
+    public void saveToFile() {
+        iterator = stack.iterator();
+        String content = "";
+        Path path = Paths.get("secretfiles/" + username + "data.txt");
+        Charset charset = StandardCharsets.UTF_8;
 
+        while (iterator.hasNext()) {
+            content += iterator.next() + "\n";
+        }
+        try {
+            Files.write(path, content.getBytes(charset));
+            System.out.print("\nДанные успешно записаны.");
+        }catch (IOException e){
+            System.out.print("\nsaveToFIle\nIOEXEPTION");
+            System.exit(123);
+        }
     }
 
     //добавляет данные из файла в стэк
-    public void addToStack(){
+    private void addToStack() {
+        try {
+            File file = new File("secretfiles/" + username + "data.txt");
+            Scanner scanner = new Scanner(file);
 
+            while(scanner.hasNextLine()){
+                stack.add(scanner.nextLine());
+            }
+//            scanner.close();
+        }catch (FileNotFoundException e){
+            System.out.print("\naddToStack\n File not found");
+            System.exit(1337);
+        }
     }
-
     //создает новое сообщение и добавляет его в стэк
-    public void newMessage(){
-
+    public void newMessage() {
+            String add = getDate() + " - " + getRandomUser() + " - " + getRandomText();
+            stack.add(add);
+            writerFromFile();
     }
 
     //вывод того что есть в стеке
     public void whatInStack(){
-
+        tempStack = stack;
+        while(!stack.empty()){
+            System.out.print("\n" + stack.pop());
+        }
+        stack = tempStack;
     }
 
 
@@ -118,13 +149,14 @@ public class Messages {
             Path path = Paths.get("secretfiles/" + username + "data.txt");
             Charset charset = StandardCharsets.UTF_8;
             String content = getDate() + " - " + getRandomUser() + " - " + getRandomText();
-            System.out.print("\nИдет создание документа\n");
+            System.out.print("Подождите немного...\nИдет создание вашего документа...\n");
             for (int i = 1;i<10;i++){
                 System.out.print(".");
                 TimeUnit.SECONDS.sleep(1);
                 content += "\n" + getDate() + " - " + getRandomUser() + " - " + getRandomText();
             }
             Files.write(path, content.getBytes(charset));
+            System.out.print("\nФайл успешно создан.");
         }catch(IOException e){
             System.out.print("\nGenerateRandomMessagess IOEXEPTION");
             System.exit(5);
@@ -169,7 +201,6 @@ public class Messages {
         userpath = "secretfiles/users.txt";
         try {
             File file = new File(userpath);
-            System.out.print("\n" + userpath);
             LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(file));
             count = 0;
             while (null != lineNumberReader.readLine()){

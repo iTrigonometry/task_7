@@ -1,13 +1,11 @@
 package Objects;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Scanner;
 
 //TODO при авторизации записывать это все в два файла (имя юзера в users.txt, а пароль юзера + юзера в users.properties)
@@ -16,30 +14,33 @@ import java.util.Scanner;
 //ОТДЕЛЬНЫЙ ПЛАН ДЕЙСТВИЙ
 /*
 Пользователь вводит данные.
-Теперь мы должны проверить эти данные. Так как если они уже присутсвуют, то нужно об этом предупредить и начать вводить данные заново TODO вынести в оотдельный метод ввод данных
+Теперь мы должны проверить эти данные. Так как если они уже присутсвуют, то нужно об этом предупредить и начать вводить данные заново TODODO вынести в оотдельный метод ввод данных
 Если таких данных не было обнаружено, то мы для начала записывваем данные в файл, а только потом создаем файл пользователя и генерируем в него сообщения
 
 ПРОБЛЕМЫ КОТОРЫЕ МЕНЯ БЕСПОКОЯТ
 так как мы используем для хранения паролей файл properties, то тут возникает очень не приятная вещь как кодировка. при ввводе русских символов вв properties, мы получаем просто набор непонятных символов.
 Решение этой проблемы методом фикса кодировки не катит, так как это того не стОит.
 А вот например заставить пользователя вводить только латинские символы стОит
-
  */
 public class Registration {
 
     private String username, password;
     public Registration(){
         Scanner  scanner = new Scanner(System.in);
-
+        System.out.print("\nВведите логин: ");
         username = inputUsername();
+        System.out.print("\nВведите пароль: ");
         password = scanner.next();
         writeDataToProperties();
         createUserFile();
+
+        System.out.print("\nРегистрация прошла успешно. Перезапустите программу и проверьте свою почту.");
+        System.exit(123);
     }
 
     private void createUserFile(){
         File file = new File("secretfiles/", username + "data.txt");
-        Messages messages = new Messages(username, password);
+        Messages messages = new Messages(username, password, false);
         messages.generateRandomMessagess();
     }
 
@@ -71,6 +72,7 @@ public class Registration {
                 Files.write(path,string.getBytes(StandardCharsets.UTF_8));
                 return result;
             }
+            System.out.print("\n Такой пользователь уже существует. Введите другой логин: ");
         }while(flag);
         }catch (IOException e) {
             System.exit(112);
